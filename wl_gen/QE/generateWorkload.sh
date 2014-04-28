@@ -130,11 +130,11 @@ echo "Results directory: " $RES_DIR
 fi
 
 # Get output file
-echo -n  "Enter the output file for the workload [/path/to/file.ext . Default: ../../workloads/QE_`date +%Y%m%d`.txt]: "
+echo -n  "Enter the output file for the workload [/path/to/file.ext . Default: ../../workloads/wl_`date +%Y%m%d`.txt]: "
 read OUT_FILE
 if [ -z $OUT_FILE ]
 then
-OUT_FILE="../../workloads/QE_`date +%Y%m%d`.txt"
+OUT_FILE="../../workloads/wl_`date +%Y%m%d`.txt"
 while [ -f $OUT_FILE ]
 do
 echo -n "File $OUT_FILE already exists. Enter a new output file:"
@@ -144,7 +144,7 @@ echo "Output file: " $OUT_FILE
 elif [ -f $OUT_FILE ]
 then
 echo "File $OUT_FILE already exists. Using default output file."
-OUT_FILE="../../workloads/QE_`date +%Y%m%d`.txt"
+OUT_FILE="../../workloads/wl_`date +%Y%m%d`.txt"
 while [ -f $OUT_FILE ]
 do
 echo -n "Default output file $OUT_FILE already exists. Enter a new output file:"
@@ -155,28 +155,30 @@ fi
 
 ## GENERATE WORKLOAD FILE, LINE BY LINE
 
-# Pick file
+# Pick input URI
 # Compound or target
 test=`echo "scale=10; `echo $RANDOM` / 32767 <= $TYPE_BIAS" | bc`
 if [ $test -gt 0 ]
 then
-# compound
+# Compound
+# Pick file randomly if not given
 if [ $COM_FILE -eq 0]
-# pick file randomly
 NUM_FILES=`find ../../resources/compounds/ -type f -name *.txt | wc -l`
 CUR_FILE=`find ../../resources/compounds/ -type f -name *.txt | tail -n `echo $(( $RANDOM % $NUM_FILES + 1))` | head -1`
 else
 CUR_FILE=$COM_FILE
 fi
-LINE="C \t"
+LINE="compoundPharmacology.sparql \t"
 else
-# target
+# Target
+# Pick file randomly if not given
 if [ $TAR_FILE -eq 0]
-# pick file randomly
 NUM_FILES=`find ../../resources/targets/ -type f -name *.txt | wc -l`
 CUR_FILE=`find ../../resources/targets/ -type f -name *.txt | tail -n `echo $(( $RANDOM % $NUM_FILES + 1))` | head -1`
 else
 CUR_FILE=$TAR_FILE
 fi
-LINE="T \t"
+LINE="targetPharmacology.sparql \t"
 fi
+LINE=$LINE`tail -n  `echo $(( $RANDOM % `wc -l $CUR_FILE` + 1))` | head -1`
+echo $LINE
