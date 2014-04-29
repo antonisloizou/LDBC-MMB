@@ -1,6 +1,7 @@
 /resources/**/*.txt
 /virtuoso-db/*
 !/virtuoso-db/init_ld_dir.sql
+!/virtuoso-db/virtuoso.ini
 /results/*/*
 *.ttl
 *.nt
