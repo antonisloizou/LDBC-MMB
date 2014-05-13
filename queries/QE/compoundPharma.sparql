@@ -68,7 +68,7 @@ WHERE {
 			?assay_uri chembl:hasTarget ?target_uri .
 			?target_uri a ?target_type .
 		}
-	} ORDER BY ?activity LIMIT MY_LIMIT }
+	} ORDER BY ?activity LIMIT PAGE_SIZE }
 	GRAPH <http://ops.rsc.org> {
 		VALUES ?ocrs_uri { GRAPH_http://ops.rsc.org_VALUES  }
 		?ocrs_uri cheminf:CHEMINF_000018 ?smiles ;

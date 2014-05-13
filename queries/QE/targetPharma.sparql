@@ -68,7 +68,7 @@ WHERE {
 				chembl:hasMolecule ?chembl_compound ;
 				chembl:hasAssay ?assay_uri .
 		}
-	} ORDER BY ?activity LIMIT MY_LIMIT }
+	} ORDER BY ?activity LIMIT PAGE_SIZE}
 	GRAPH <http://www.ebi.ac.uk/chembl> {
 		VALUES ?chembl_uri { GRAPH_http://www.ebi.ac.uk/chembl_VALUES } 
 		?activity a chembl:Activity ;
