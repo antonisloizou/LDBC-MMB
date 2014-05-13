@@ -7,7 +7,7 @@ PREFIX ops-ims: <http://openphacts.cs.man.ac.uk:9090/ontology/DataSource.owl#>
 PREFIX void: <http://rdfs.org/ns/void#>
 
 SELECT DISTINCT ?linkset_graph ?link_pred
-FROM <http://www.openphacts.org/lenses/LENS_NAME>
+FROM <LENS_URI>
 WHERE {
   ?lens ops-ims:linksetJustification ?justification .
   GRAPH ?linkset_graph {

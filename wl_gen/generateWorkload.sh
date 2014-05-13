@@ -73,7 +73,7 @@ else
 fi
 
 # Get Lens
-echo -n  'Enter the Lens name: [Default: Pick a lens randomly for each query.]: '
+echo -n  'Enter the Lens URI: [Default: Pick a lens randomly for each query.]: '
 read LENS
 if [ -z $LENS ]
 then
@@ -81,7 +81,7 @@ then
 	echo "Picking a lens randomly for each query"
 else
 	test=0
-	for lens in `cat ../../resources/lenses/lenses.txt`
+	for lens in `cat ../resources/lenses/lenses.txt`
 	do
 		if [ "$LENS" == "$lens" ]
 		then
@@ -98,59 +98,33 @@ else
 fi
 
 # Get Limit
-echo -n  'Enter the LIMIT to use: [Positive integer. Default: Pick one of 10, 25, 50.]: '
+echo -n  'Enter the PAGE_SIZE to use: [Positive integer. Default: Pick one of 10, 25, 50.]: '
 read LIMIT
 if [ -z $LIMIT ]
 then
 	LIMIT=0
-echo "Picking LIMIT randomly from [10, 25, 50]."
+echo "Picking PAGE_SIZE randomly from [10, 25, 50]."
 else
 	test=`echo "$LIMIT < 0" | bc`
 	if [ $test -gt 0 ]
 	then
-		echo "Must be positive. Picking LIMIT randomly from [10, 25, 50]."
+		echo "Must be positive. Picking PAGE_SIZE randomly from [10, 25, 50]."
 		LIMIT=0
 	elif [[ $LIMIT == *.* ]]
 	then
-		echo "Must be an integer. Picking LIMIT randomly from [10, 25, 50]."
+		echo "Must be an integer. Picking PAGE_SIZE randomly from [10, 25, 50]."
 	LIMIT=0
 	else 
 		echo "Using LIMIT: " $LIMIT
 	fi
 fi
 
-# Get results dir
-echo -n  "Enter the results directory [/path/to/dir/ . Default: ../../results/QE/`date +%Y%m%d`]: "
-read RES_DIR
-if [ -z $RES_DIR ]
-then
-	RES_DIR="../../results/QE/`date +%Y%m%d`"
-	while [ -d $RES_DIR ]
-	do
-		echo -n "Directory $RES_DIR already exists. Enter a new results directory:"
-		read RES_DIR
-	done
-	mkdir $RES_DIR
-	echo "Results directory: " $RES_DIR
-elif [ -d $RES_DIR ]
-then
-	echo "Directory $RES_DIR already exists. Using default results directory."
-	RES_DIR="../../results/QE/`date +%Y%m%d`"
-	while [ -d $RES_DIR ]
-	do
-		echo -n "Default results directory $RES_DIR already exists. Enter a new results directory:"
-		read RES_DIR
-	done
-	mkdir $RES_DIR
-	echo "Results directory: " $RES_DIR
-fi
-
 # Get output file
-echo -n  "Enter the output file for the workload [<filename> . Default: ../../workloads/wl_`date +%Y%m%d`.txt]: "
+echo -n  "Enter the output file for the workload [<filename> . Default: ../workloads/wl_`date +%Y%m%d`.txt]: "
 read OUT_FILE
 if [ -z $OUT_FILE ]
 then
-	OUT_FILE="../../workloads/wl_`date +%Y%m%d`.txt"
+	OUT_FILE="../workloads/wl_`date +%Y%m%d`.txt"
 	while [ -f $OUT_FILE ]
 	do
 		echo -n "File $OUT_FILE already exists. Enter a new output file:"
@@ -160,7 +134,7 @@ then
 elif [ -f $OUT_FILE ]
 then
 	echo "File $OUT_FILE already exists. Using default output file."
-	OUT_FILE="../../workloads/wl_`date +%Y%m%d`.txt"
+	OUT_FILE="../workloads/wl_`date +%Y%m%d`.txt"
 	while [ -f $OUT_FILE ]
 	do
 		echo -n "Default output file $OUT_FILE already exists. Enter a new output file:"
@@ -223,8 +197,8 @@ do
 		if [ $COM_FILE == 0 ]
 		then
 			# Pick file randomly
-			NUM_FILES=`find ../../resources/compounds/ -type f -name *.txt | wc -l`
-			CUR_FILE=`find ../../resources/compounds/ -type f -name *.txt | tail -n $(( $RANDOM % $NUM_FILES + 1)) | head -1`
+			NUM_FILES=`find ../resources/compounds/ -type f -name *.txt | wc -l`
+			CUR_FILE=`find ../resources/compounds/ -type f -name *.txt | tail -n $(( $RANDOM % $NUM_FILES + 1)) | head -1`
 		else
 			CUR_FILE=$COM_FILE
 		fi
@@ -234,8 +208,8 @@ do
 		if [ $TAR_FILE == 0 ]
 		then
 			# Pick file randomly
-			NUM_FILES=`find ../../resources/targets/ -type f -name *.txt | wc -l`
-			CUR_FILE=`find ../../resources/targets/ -type f -name *.txt | tail -n $(( $RANDOM % $NUM_FILES + 1)) | head -1`
+			NUM_FILES=`find ../resources/targets/ -type f -name *.txt | wc -l`
+			CUR_FILE=`find ../resources/targets/ -type f -name *.txt | tail -n $(( $RANDOM % $NUM_FILES + 1)) | head -1`
 		else
 			CUR_FILE=$TAR_FILE
 		fi
@@ -247,8 +221,8 @@ do
 	if [ $LENS == 0 ]
 	then
 		# Pick lens randomly
-		NUM_LINES=`wc -l < ../../resources/lenses/lenses.txt`
-		LINE="$LINE`tail -n  $(( $RANDOM % $NUM_LINES + 1)) ../../resources/lenses/lenses.txt | head -1`	"
+		NUM_LINES=`wc -l < ../resources/lenses/lenses.txt`
+		LINE="$LINE`tail -n  $(( $RANDOM % $NUM_LINES + 1)) ../resources/lenses/lenses.txt | head -1`	"
 	else
 		LINE="$LINE$LENS	"
 	fi
