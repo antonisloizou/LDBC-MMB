@@ -51,12 +51,12 @@ do
 		URIS=`echo "$XML" | grep "$graph" -A 1 | sed -n 's,.*<binding name="uri"><uri>\(.*\)</uri></binding>,\1,p'`
 		if [ -z "$URIS" ]
 		then
-			echo 0 >> $3/QE/mappings_count_`echo $graph | sed -e 's,http://,,' -e 's,/,_,g'`
-			echo NULL >> $3/QE/mappings_URIs_`echo $graph | sed -e 's,http://,,' -e 's,/,_,g'`
+			echo 0 >> $3/QE/mappings_count_`echo $graph | sed -e 's,http://,,' -e 's,/,_,g'`.txt
+			echo NULL >> $3/QE/mappings_URIs_`echo $graph | sed -e 's,http://,,' -e 's,/,_,g'`.txt
 			QUERY=`echo "$QUERY" | sed "s,GRAPH_${graph}_VALUES,'No mappings found',"`
 		else
-			echo "$URIS" | wc -l >> $3mappings_count_`echo $graph | sed -e 's,http://,,' -e 's,/,_,g'`
-			echo `echo "$URIS" | tr '\n' ' '` >> $3mappings_URIs_`echo $graph | sed -e 's,http://,,' -e 's,/,_,g'`
+			echo "$URIS" | wc -l >> $3/QE/mappings_count_`echo $graph | sed -e 's,http://,,' -e 's,/,_,g'`.txt
+			echo `echo "$URIS" | tr '\n' ' '` >> $3/QE/mappings_URIs_`echo $graph | sed -e 's,http://,,' -e 's,/,_,g'`.txt
 			RDF_URIS=`echo "$URIS" | sed -e 's,^ *,<,' -e 's, *$,>,' | tr '\n' ' '`
 			QUERY=`echo "$QUERY" | sed "s,GRAPH_${graph}_VALUES,$RDF_URIS,"`
 		fi
@@ -64,11 +64,11 @@ do
 	log "CONSTRUCT query:"
 	log "$QUERY"
 	log "End construct query"
-	RDF=$({ time curl --data-urlencode "query=$QUERY" "$2" 2>/dev/null ; } 2>> $3/response_times_pharmacology.txt)
+	RDF=$({ time curl --data-urlencode "query=$QUERY" "$2" 2>/dev/null ; } 2>> $3/QE/response_times_pharmacology.txt)
 	log "RDF response received"
 	log "$RDF"
 	log "End RDF response"
-	rapper -c -i guess -  base <<< "$RDF" 2>&1 | grep returned | sed 's,.* \([0-9][0-9]*\) .*,\1,' >> $3/triple_count_pharmacology.txt
+	rapper -c -i guess -  base <<< "$RDF" 2>&1 | grep returned | sed 's,.* \([0-9][0-9]*\) .*,\1,' >> $3/QE/triple_count_pharmacology.txt
 done < <(grep -v "^#" $1)
 
 rm .*.tmp
