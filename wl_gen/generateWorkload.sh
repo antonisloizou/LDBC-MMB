@@ -190,6 +190,15 @@ echo '#' >> $OUT_FILE
 for (( i=0; i < $WL_SIZE; i++ ))
 do
 	# Pick input URI
+	#Primary or secondary
+	test=`echo "scale=10; $RANDOM / 32767 <= $URI_BIAS" | bc`
+        if [ $test -gt 0 ]
+        then
+		INPUT_SOURCE="primary"
+	else
+		INPUT_SOURCE="secondary"
+	fi
+	#Compound or Target
 	test=`echo "scale=10; $RANDOM / 32767 <= $TYPE_BIAS" | bc`
 	if [ $test -gt 0 ]
 	then
@@ -197,8 +206,8 @@ do
 		if [ $COM_FILE == 0 ]
 		then
 			# Pick file randomly
-			NUM_FILES=`find ../resources/compounds/ -type f -name *.txt | wc -l`
-			CUR_FILE=`find ../resources/compounds/ -type f -name *.txt | tail -n $(( $RANDOM % $NUM_FILES + 1)) | head -1`
+			NUM_FILES=`find ../resources/compounds/$INPUT_SOURCE/ -type f -name *.txt | wc -l`
+			CUR_FILE=`find ../resources/compounds/$INPUT_SOURCE/ -type f -name *.txt | tail -n $(( $RANDOM % $NUM_FILES + 1)) | head -1`
 		else
 			CUR_FILE=$COM_FILE
 		fi
@@ -208,8 +217,8 @@ do
 		if [ $TAR_FILE == 0 ]
 		then
 			# Pick file randomly
-			NUM_FILES=`find ../resources/targets/ -type f -name *.txt | wc -l`
-			CUR_FILE=`find ../resources/targets/ -type f -name *.txt | tail -n $(( $RANDOM % $NUM_FILES + 1)) | head -1`
+			NUM_FILES=`find ../resources/targets/$INPUT_SOURCE/ -type f -name *.txt | wc -l`
+			CUR_FILE=`find ../resources/targets/$INPUT_SOURCE/ -type f -name *.txt | tail -n $(( $RANDOM % $NUM_FILES + 1)) | head -1`
 		else
 			CUR_FILE=$TAR_FILE
 		fi
