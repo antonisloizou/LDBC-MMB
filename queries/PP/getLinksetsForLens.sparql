@@ -1,0 +1,17 @@
+#Parameters: LENS_NAME
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dul: <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#>
+PREFIX ops-ims: <http://openphacts.cs.man.ac.uk:9090/ontology/DataSource.owl#>
+PREFIX void: <http://rdfs.org/ns/void#>
+
+SELECT DISTINCT ?linkset_graph ?link_pred
+FROM <LENS_URI>
+WHERE {
+  ?lens ops-ims:linksetJustification ?justification .
+  GRAPH ?linkset_graph {
+    ?linkset dul:expresses ?justification ;
+      void:linkPredicate ?link_pred .
+  }
+}

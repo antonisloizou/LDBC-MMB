@@ -60,8 +60,10 @@ FROM <http://linkedlifedata.com/resource/drugbank>
 FROM_CLAUSE
 WHERE {
 	{ SELECT ?activity ?chembl_uri ?chembl_compound WHERE {
+		<INPUT_URI>
+			PROP_PATH
+				?chembl_uri .
 		GRAPH <http://www.ebi.ac.uk/chembl> {
-			VALUES ?chembl_uri { GRAPH_http://www.ebi.ac.uk/chembl_VALUES }
 			?activity chembl:hasAssay/chembl:hasTarget ?chembl_uri ;
 				a chembl:Activity ;
 				chembl:hasMolecule ?chembl_compound .

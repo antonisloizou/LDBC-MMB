@@ -11,7 +11,7 @@ PREFIX bibo: <http://purl.org/ontology/bibo/>
 PREFIX drugbank: <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugbank/>
 PREFIX ops: <http://www.openphacts.org/api#>
 CONSTRUCT {
-?activity chembl:hasMolecule ?chembl_compound ;
+?activity chembl:hasMolecule ?chembl_uri ;
 	chembl:standardType ?activity_type ;
 	chembl:standardRelation ?activity_relation ;
 	chembl:standardValue ?activity_value ;
@@ -27,17 +27,17 @@ CONSTRUCT {
 	bibo:pmid ?pmid ;
 	void:inDataset <http://www.ebi.ac.uk/chembl> .
 ?qudt_uri skos:prefLabel ?activity_unit .
-?assay_uri chembl:hasTarget ?chembl_uri ;
+?assay_uri chembl:hasTarget ?target_uri ;
 	chembl:assayOrganismName ?assay_organism ;
 	chembl:assayTestType ?assay_type ;
 	dcterms:description ?assay_description  ;
 	void:inDataset <http://www.ebi.ac.uk/chembl> .
-?chembl_uri dcterms:title ?target_name ;
+?target_uri dcterms:title ?target_name ;
 	chembl:targetOrganismName ?target_organism ;
 	chembl:hasTargetComponent ?protein ;
 	a ?target_type ;
 	void:inDataset <http://www.ebi.ac.uk/chembl> . 
-?chembl_compound skos:exactMatch ?cw_compound_uri .
+?chembl_uri skos:exactMatch ?cw_compound_uri .
 ?cw_compound_uri skos:prefLabel ?compound_name ;
 	void:inDataset <http://www.conceptwiki.org> .
 ?chembl_uri skos:exactMatch ?ocrs_uri .
@@ -59,20 +59,36 @@ FROM <http://www.ebi.ac.uk/chembl>
 FROM <http://linkedlifedata.com/resource/drugbank>
 FROM_CLAUSE
 WHERE {
-	{ SELECT ?activity ?chembl_uri ?chembl_compound WHERE {
+	{ SELECT ?activity ?chembl_uri ?target_uri WHERE {
+		<INPUT_URI>
+			PROP_PATH
+				?chembl_uri .
 		GRAPH <http://www.ebi.ac.uk/chembl> {
-			VALUES ?chembl_uri { GRAPH_http://www.ebi.ac.uk/chembl_VALUES }
-			?activity chembl:hasAssay/chembl:hasTarget ?chembl_uri ;
+			?activity chembl:hasMolecule ?chembl_uri ;
 				a chembl:Activity ;
-				chembl:hasMolecule ?chembl_compound .
+				chembl:hasAssay/chembl:hasTarget ?target_uri .
 		}
-	} ORDER BY ?activity LIMIT PAGE_SIZE}
+	} ORDER BY ?activity LIMIT PAGE_SIZE }
+	<INPUT_URI>
+		PROP_PATH
+			?ocrs_uri .
+	GRAPH <http://ops.rsc.org> {
+		?ocrs_uri cheminf:CHEMINF_000018 ?smiles ;
+			cheminf:CHEMINF_000396 ?inchi ;
+			cheminf:CHEMINF_000399 ?inchiKey .
+		OPTIONAL { [] obo:IAO_0000136 ?ocrs_uri ;
+				a cheminf:CHEMINF_000484 ;
+				qudt:numericValue ?molweight . }
+		OPTIONAL { [] obo:IAO_0000136 ?ocrs_uri ;
+				a cheminf:CHEMINF_000367;
+				qudt:numericValue ?num_ro5_violations . }
+	}
 	GRAPH <http://www.ebi.ac.uk/chembl> {
 		?activity chembl:hasAssay ?assay_uri .
-		?chembl_uri a ?target_type .
-		OPTIONAL { ?chembl_uri dcterms:title ?target_name }
-		OPTIONAL { ?chembl_uri chembl:organismName ?target_organism }
-		OPTIONAL { ?chembl_uri chembl:hasTargetComponent ?protein }
+		?target_uri a ?target_type .
+		OPTIONAL { ?target_uri dcterms:title ?target_name }
+		OPTIONAL { ?target_uri chembl:organismName ?target_organism }
+		OPTIONAL { ?target_uri chembl:hasTargetComponent ?protein }
 		OPTIONAL { ?assay_uri dcterms:description ?assay_description }
 		OPTIONAL { ?assay_uri chembl:assayTestType ?assay_type }
 		OPTIONAL { ?activity chembl:publishedType ?published_type }
@@ -91,30 +107,16 @@ WHERE {
 			OPTIONAL { ?doc_uri bibo:pmid ?pmid }
 		}	
 	}
-	?chembl_compound
-		PROP_PATH
-			?ocrs_uri .
-	GRAPH <http://ops.rsc.org> {
-		?ocrs_uri cheminf:CHEMINF_000018 ?smiles ;
-			cheminf:CHEMINF_000396 ?inchi ;
-			cheminf:CHEMINF_000399 ?inchiKey .
-		OPTIONAL { [] obo:IAO_0000136 ?ocrs_uri ;
-				a cheminf:CHEMINF_000484 ;
-				qudt:numericValue ?molweight . }
-		OPTIONAL { [] obo:IAO_0000136 ?ocrs_uri ;
-				a cheminf:CHEMINF_000367;
-				qudt:numericValue ?num_ro5_violations . }
-		}
-	?chembl_compound
+	<INPUT_URI>
 		PROP_PATH
 			?cw_compound_uri .
 	GRAPH <http://www.conceptwiki.org> {
 		?cw_compound_uri skos:prefLabel ?compound_name .
 	}
 	OPTIONAL {
-		?chembl_compound
+		<INPUT_URI>
 			PROP_PATH
-				?db_uri .
+				?db_uri
 		GRAPH <http://linkedlifedata.com/resource/drugbank> {
 			?db_uri drugbank:genericName ?drug_name ;
 				drugbank:drugType ?drugType_uri .

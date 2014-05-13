@@ -59,14 +59,12 @@ FROM <http://www.ebi.ac.uk/chembl>
 FROM <http://linkedlifedata.com/resource/drugbank>
 FROM_CLAUSE
 WHERE {
-	{ SELECT DISTINCT ?activity WHERE {
+	{ SELECT ?activity ?chembl_uri ?target_uri WHERE {
 		GRAPH <http://www.ebi.ac.uk/chembl> {
 			VALUES ?chembl_uri { GRAPH_http://www.ebi.ac.uk/chembl_VALUES }
-			?activity a chembl:Activity ;
-				chembl:hasMolecule ?chembl_uri ;
-				chembl:hasAssay ?assay_uri .
-			?assay_uri chembl:hasTarget ?target_uri .
-			?target_uri a ?target_type .
+			?activity chembl:hasMolecule ?chembl_uri ;
+				a chembl:Activity ;
+				chembl:hasAssay/chembl:hasTarget ?target_uri .
 		}
 	} ORDER BY ?activity LIMIT PAGE_SIZE }
 	GRAPH <http://ops.rsc.org> {
@@ -82,11 +80,7 @@ WHERE {
 				qudt:numericValue ?num_ro5_violations . }
 	}
 	GRAPH <http://www.ebi.ac.uk/chembl> {
-		VALUES ?chembl_uri { GRAPH_http://www.ebi.ac.uk/chembl_VALUES } 
-		?activity a chembl:Activity ;
-			chembl:hasMolecule ?chembl_uri ;
-			chembl:hasAssay ?assay_uri .
-		?assay_uri chembl:hasTarget ?target_uri .
+		?activity chembl:hasAssay ?assay_uri .
 		?target_uri a ?target_type .
 		OPTIONAL { ?target_uri dcterms:title ?target_name }
 		OPTIONAL { ?target_uri chembl:organismName ?target_organism }
