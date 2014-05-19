@@ -37,7 +37,7 @@ do
 	if [ "$TYPE" == "C" ]
 	then
 		QUERY=`sed -e "s,FROM_CLAUSE,$FROM_CLAUSE
-," -e "s,PROP_PATH,$PROP_PATH," -e "s,MY_LIMIT,$LIMIT," ../../queries/QE/compoundPharma.sparql`
+," -e "s,PROP_PATH,$PROP_PATH," -e "s,PAGE_SIZE,$LIMIT," ../../queries/QE/compoundPharma.sparql`
 	elif [ "$TYPE" == "T" ]
 	then
 		QUERY=`sed -e "s,FROM_CLAUSE,$FROM_CLAUSE
