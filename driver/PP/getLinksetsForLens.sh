@@ -13,7 +13,7 @@ function log () {
         echo `date` : "$0" : "$1" >> $LOG_FILE
 }
 
-QUERY=`sed -e "s,LENS_URI,$1," -e "/^#/d" ../../queries/QE/getLinksetsForLens.sparql`
+QUERY=`sed -e "s,LENS_URI,$1," -e "/^#/d" ../../queries/PP/getLinksetsForLens.sparql`
 log "Query: "
 log "$QUERY"
 log "End query."

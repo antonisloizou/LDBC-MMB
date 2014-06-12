@@ -14,4 +14,4 @@ done
 HEADER="$HEADER	triple_count_pharmacology"
 
 echo -e "$HEADER"
-paste <(grep -v ^# ../../workloads/wl_20140513.txt) $2/response_times_* $2/triple_count_pharmacology.txt
+paste <(grep -v ^# $1) $2/response_times_* $2/triple_count_pharmacology.txt

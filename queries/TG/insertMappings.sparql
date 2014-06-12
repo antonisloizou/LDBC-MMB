@@ -1,0 +1,12 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+INSERT {
+	GRAPH <http://www.ldbcouncil.org/mmb/tg> {
+		<INPUT_URI> skos:exactMatch ?mapping
+	}
+}
+USING_CLAUSE
+WHERE { 
+	<INPUT_URI>
+		PROP_PATH
+			?mapping
+}

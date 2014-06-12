@@ -24,4 +24,4 @@ do
 done
 
 echo -e "$HEADER"
-paste <(grep -v ^# ../../workloads/wl_20140513.txt) $2/response_times_* $2/triple_count_pharmacology.txt $2/mappings_count_* $2/mappings_URIs_*
+paste <(grep -v ^# $1) $2/response_times_* $2/triple_count_pharmacology.txt $2/mappings_count_* $2/mappings_URIs_*
