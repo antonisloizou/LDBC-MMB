@@ -21,11 +21,6 @@ function log () {
         echo `date` : "$0" : "$1" >> $LOG_FILE
 }
 
-GRAPHS='http://ops.rsc.org
-http://www.conceptwiki.org
-http://www.ebi.ac.uk/chembl
-http://linkedlifedata.com/resource/drugbank'
-
 while read TYPE INPUT LENS LIMIT 
 do
 	GET_LINKSETS_OUT=`./getLinksetsForLens.sh $LENS $2 $3/PP/ $4`
