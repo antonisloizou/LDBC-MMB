@@ -1,0 +1,13 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+INSERT {
+	GRAPH <LENS_GRAPH> {
+		?source skos:exactMatch ?mapping
+	}
+}
+USING_CLAUSE
+WHERE { 
+	?source
+		PROP_PATH
+			?mapping ;
+		[] [] .
+}
