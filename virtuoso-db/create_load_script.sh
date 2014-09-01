@@ -1,0 +1,1 @@
+find data -name *.ttl | sed -e "s,^.,ld_dir( '/home/antonis/local/ldbc-mmb/data," -e "s_\(.*\)/_\1' , '_" -e "s/$/' , '/" -e 's,$,http://www.openphacts.org/,' -e 's,data/\([a-z]*\).*,&\1/,' -e "s/.*, '\(.*\), '.*/&\1/" -e "s,.ttl'[[:space:]]*$,' );,"

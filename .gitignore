@@ -2,6 +2,7 @@
 /virtuoso-db/*
 !/virtuoso-db/init_ld_dir.sql
 !/virtuoso-db/virtuoso.ini
+!/virtuoso-db/create_load_script.sh
 /results/*/*
 *.ttl
 *.nt
